@@ -1,0 +1,16 @@
+CUSTA: CUSTA JUDICIAIS
+
+Tirar o peso do advogado de ter que fazer essas custas judiciais. Quem ficaria com a emissao de valores seria o site para o cliente com guias inicias
+
+Assim, o advogado ficaria responsável por pagar guias e assim o site ficaria responsável por essa assistência
+
+
+PRIMEIRO: MODELAR BANCO DE DADOS 
+	  - Usuários: administrador, 
+	  -
+
+
+SEGUNDO: iniciar 
+
+
+
