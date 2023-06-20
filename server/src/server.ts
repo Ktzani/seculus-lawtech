@@ -1,26 +1,30 @@
+import 'dotenv/config'
+
 import Fastify from "fastify";
 import cors from "@fastify/cors"
-import { PrismaClient } from "@prisma/client";
+import jwt from "@fastify/jwt"
 
+import { usuariosRoutes } from './routes/usuarios.routes';
+import { custasRoutes } from './routes/custas.routes';
+import { processosRoutes } from './routes/processos.routes';
+
+const port = 3333
 const app = Fastify()
-const prisma = new PrismaClient()
 
 app.register(cors, {
     origin: ["https://localhost:8080"]
 }) // Aqui posso colocar quais endereços do front podem acessar o back
 
-app.get('/', async (req, res) => {
-   const habits = await prisma.aluno.findFirst({
-    where:{
-        name: "Catiza"
-    }
-   })
-
-   res.send(habits)
+app.register(jwt, {
+    secret: "351 hgfn2130ericjm1358nb 24372 vc37r631"
 })
 
+app.register(usuariosRoutes)
+app.register(custasRoutes)
+app.register(processosRoutes)
+
 app.listen({
-    port: 8080 
+    port: port,
 }).then(() => {
-    console.log("Servidor rodando na porta 8080")
+    console.log('HTTP server running on localhost:' + port)
 })
