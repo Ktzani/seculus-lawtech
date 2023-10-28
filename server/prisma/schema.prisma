@@ -2,199 +2,198 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model Usuario {
-  id            String   @id @default(uuid())
-  primeiro_nome String   @db.Text
-  sobrenome     String   @db.Text
-  email         String   @unique @db.VarChar(100)
-  senha         String   @db.VarChar(200)
-  logradouro    String   @db.VarChar(50)
-  complemento   String?  @db.VarChar(20)
-  numero        Int
-  bairro        String   @db.VarChar(50)
-  cep           String   @db.VarChar(9)
-  cidade        String   @db.VarChar(50)
-  uf            String   @db.Char(2)
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+    id          String   @id @default(uuid())
+    nome        String   @db.Text
+    email       String   @unique @db.VarChar(150)
+    senha       String   @db.VarChar(100)
+    logradouro  String   @db.VarChar(50)
+    complemento String?  @db.VarChar(20)
+    numero      Int
+    bairro      String   @db.VarChar(50)
+    cep         String   @db.VarChar(9)
+    cidade      String   @db.VarChar(50)
+    uf          String   @db.Char(2)
+    created_at  DateTime @default(now())
+    updated_at  DateTime @updatedAt
 
-  advogados          Advogado[]
-  pessoasFisicas     PessoaFisica[]
-  pessoasJuridicas   PessoaJuridica[]
-  administradores    Administrador[]
-  telefonesUsuarios  TelefoneUsuario[]
-  defesas            Defesa[]
-  processosJuridicos ProcessoJuridico[]
+    advogados          Advogado[]
+    pessoasFisicas     PessoaFisica[]
+    pessoasJuridicas   PessoaJuridica[]
+    administradores    Administrador[]
+    telefonesUsuarios  TelefoneUsuario[]
+    defesas            Defesa[]
+    processosJuridicos ProcessoJuridico[]
 
-  @@map("usuarios")
+    @@map("usuarios")
 }
 
 model Advogado {
-  id_usuario                String  @id
-  oab                       String? @db.VarChar(20)
-  estagiario                Boolean @default(false)
-  cnpj_escritorio_advocacia String?
+    id_usuario                String  @id
+    oab                       String? @db.VarChar(20)
+    estagiario                Boolean @default(false)
+    cnpj_escritorio_advocacia String?
 
-  usuario             Usuario              @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  escritorioAdvocacia EscritorioAdvocacia? @relation(fields: [cnpj_escritorio_advocacia], references: [cnpj], onDelete: SetNull, onUpdate: SetNull)
-  defesas             Defesa[]
-  processosJuridicos  ProcessoJuridico[]
+    usuario             Usuario              @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    escritorioAdvocacia EscritorioAdvocacia? @relation(fields: [cnpj_escritorio_advocacia], references: [cnpj], onDelete: SetNull, onUpdate: SetNull)
+    defesas             Defesa[]
+    processosJuridicos  ProcessoJuridico[]
 
-  @@map("advogados")
+    @@map("advogados")
 }
 
 model PessoaFisica {
-  id_usuario      String   @id
-  cpf             String   @db.VarChar(12)
-  estado_civil    String   @db.VarChar(20)
-  sexo            String   @db.Char(2)
-  data_nascimento DateTime
+    id_usuario      String   @id
+    cpf             String   @db.VarChar(12)
+    estado_civil    String   @db.VarChar(20)
+    sexo            String   @db.Char(2)
+    data_nascimento DateTime
 
-  usuario Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    usuario Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@map("pessoa_fisica")
+    @@map("pessoa_fisica")
 }
 
 model PessoaJuridica {
-  id_usuario    String   @id
-  cnpj          String   @db.VarChar(15)
-  data_abertura DateTime
-  razao_social  String   @db.Text
+    id_usuario    String   @id
+    cnpj          String   @db.VarChar(15)
+    data_abertura DateTime
+    razao_social  String   @db.Text
 
-  usuario Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    usuario Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@map("pessoa_juridica")
+    @@map("pessoa_juridica")
 }
 
 model Administrador {
-  id_usuario String @id
-  nivel      Int
+    id_usuario String @id
+    nivel      Int
 
-  usuario Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    usuario Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@map("administradores")
+    @@map("administradores")
 }
 
 model TelefoneUsuario {
-  id_usuario String
-  telefone   String @db.VarChar(20)
+    id_usuario String
+    telefone   String @db.VarChar(20)
 
-  usuario Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    usuario Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([id_usuario, telefone])
-  @@map("telefones_usuarios")
+    @@id([id_usuario, telefone])
+    @@map("telefones_usuarios")
 }
 
 model Defesa {
-  id_advogado String
-  id_cliente  String
+    id_advogado String
+    id_cliente  String
 
-  advogado Advogado @relation(fields: [id_advogado], references: [id_usuario], onDelete: Cascade, onUpdate: Cascade)
-  cliente  Usuario  @relation(fields: [id_cliente], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    advogado Advogado @relation(fields: [id_advogado], references: [id_usuario], onDelete: Cascade, onUpdate: Cascade)
+    cliente  Usuario  @relation(fields: [id_cliente], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([id_advogado, id_cliente])
-  @@map("defesas")
+    @@id([id_advogado, id_cliente])
+    @@map("defesas")
 }
 
 model EscritorioAdvocacia {
-  cnpj         String  @id @db.VarChar(15)
-  nome         String  @db.Text
-  sigla        String? @db.VarChar(10)
-  incricao_oab String  @db.VarChar(30)
-  logradouro   String  @db.VarChar(50)
-  complemento  String? @db.VarChar(20)
-  numero       Int
-  bairro       String  @db.VarChar(50)
-  cep          String  @db.VarChar(9)
-  cidade       String  @db.VarChar(50)
-  uf           String  @db.Char(2)
+    cnpj         String  @id @db.VarChar(15)
+    nome         String  @db.Text
+    sigla        String? @db.VarChar(10)
+    incricao_oab String  @db.VarChar(30)
+    logradouro   String  @db.VarChar(50)
+    complemento  String? @db.VarChar(20)
+    numero       Int
+    bairro       String  @db.VarChar(50)
+    cep          String  @db.VarChar(9)
+    cidade       String  @db.VarChar(50)
+    uf           String  @db.Char(2)
 
-  advogados            Advogado[]
-  telefonesEscritorios TelefoneEscritorio[]
+    advogados            Advogado[]
+    telefonesEscritorios TelefoneEscritorio[]
 
-  @@map("escritorios_advocacia")
+    @@map("escritorios_advocacia")
 }
 
 model TelefoneEscritorio {
-  cnpj_escritorio String
-  telefone        String @db.VarChar(20)
+    cnpj_escritorio String
+    telefone        String @db.VarChar(20)
 
-  escritorioAdvocacia EscritorioAdvocacia @relation(fields: [cnpj_escritorio], references: [cnpj], onDelete: Cascade, onUpdate: Cascade)
+    escritorioAdvocacia EscritorioAdvocacia @relation(fields: [cnpj_escritorio], references: [cnpj], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([cnpj_escritorio, telefone])
-  @@map("telefones_escritorios")
+    @@id([cnpj_escritorio, telefone])
+    @@map("telefones_escritorios")
 }
 
 model ProcessoJuridico {
-  numero            String    @id @db.VarChar(30)
-  grau              String    @db.VarChar(10)
-  causa             String    @db.Text
-  data_inicio       DateTime
-  data_final        DateTime?
-  valor_causa       Float
-  id_advogado       String
-  id_cliente        String
-  cnpj_beneficiario String
+    numero            String    @id @db.VarChar(30)
+    grau              String    @db.VarChar(10)
+    causa             String    @db.Text
+    data_inicio       DateTime
+    data_final        DateTime?
+    valor_causa       Decimal   @db.Money
+    id_advogado       String
+    id_cliente        String
+    cnpj_beneficiario String
 
-  advogado        Advogado        @relation(fields: [id_advogado], references: [id_usuario], onDelete: Restrict, onUpdate: Restrict)
-  cliente         Usuario         @relation(fields: [id_cliente], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  beneficiario    Beneficiario    @relation(fields: [cnpj_beneficiario], references: [cnpj], onDelete: Restrict, onUpdate: Restrict)
-  custasJudiciais CustaJudicial[]
+    advogado        Advogado        @relation(fields: [id_advogado], references: [id_usuario], onDelete: Restrict, onUpdate: Restrict)
+    cliente         Usuario         @relation(fields: [id_cliente], references: [id], onDelete: Restrict, onUpdate: Restrict)
+    beneficiario    Beneficiario    @relation(fields: [cnpj_beneficiario], references: [cnpj], onDelete: Restrict, onUpdate: Restrict)
+    custasJudiciais CustaJudicial[]
 
-  @@map("processos_juridicos")
+    @@map("processos_juridicos")
 }
 
 model Beneficiario {
-  cnpj  String  @id @db.VarChar(15)
-  nome  String  @db.Text
-  sigla String?
+    cnpj  String  @id @db.VarChar(15)
+    nome  String  @db.Text
+    sigla String?
 
-  processosJuridicos     ProcessoJuridico[]
-  beneficiariosEstaduais BeneficiarioEstadual[]
-  beneficiariosFederais  BeneficiarioFederal[]
-  custasJudiciais        CustaJudicial[]
+    processosJuridicos     ProcessoJuridico[]
+    beneficiariosEstaduais BeneficiarioEstadual[]
+    beneficiariosFederais  BeneficiarioFederal[]
+    custasJudiciais        CustaJudicial[]
 
-  @@map("beneficiarios")
+    @@map("beneficiarios")
 }
 
 model BeneficiarioEstadual {
-  cnpj_beneficiario String @id
-  uf                String @db.Char(2)
+    cnpj_beneficiario String @id
+    uf                String @db.Char(2)
 
-  beneficiario Beneficiario @relation(fields: [cnpj_beneficiario], references: [cnpj], onDelete: Cascade, onUpdate: Cascade)
+    beneficiario Beneficiario @relation(fields: [cnpj_beneficiario], references: [cnpj], onDelete: Cascade, onUpdate: Cascade)
 
-  @@map("beneficiarios_estaduais")
+    @@map("beneficiarios_estaduais")
 }
 
 model BeneficiarioFederal {
-  cnpj_beneficiario String @id
-  regiao            String @db.VarChar(50)
+    cnpj_beneficiario String @id
+    regiao            String @db.VarChar(50)
 
-  beneficiario Beneficiario @relation(fields: [cnpj_beneficiario], references: [cnpj], onDelete: Cascade, onUpdate: Cascade)
+    beneficiario Beneficiario @relation(fields: [cnpj_beneficiario], references: [cnpj], onDelete: Cascade, onUpdate: Cascade)
 
-  @@map("beneficiarios_federais")
+    @@map("beneficiarios_federais")
 }
 
 model CustaJudicial {
-  codigo            String   @id @db.VarChar(100)
-  tipo              String   @db.VarChar(50)
-  data_emissao      DateTime
-  data_validade     DateTime
-  valor_total       Float
-  boleto            String   @db.VarChar(100)
-  cnpj_beneficiario String
-  numero_processo   String
+    codigo            String   @id @db.VarChar(100)
+    tipo              String   @db.VarChar(50)
+    data_emissao      DateTime
+    data_validade     DateTime
+    valor_total       Decimal  @db.Money
+    boleto            String   @db.VarChar(100)
+    cnpj_beneficiario String
+    numero_processo   String
 
-  beneficiario     Beneficiario     @relation(fields: [cnpj_beneficiario], references: [cnpj], onDelete: Restrict, onUpdate: Restrict)
-  processoJuridico ProcessoJuridico @relation(fields: [numero_processo], references: [numero], onDelete: Restrict, onUpdate: Restrict)
+    beneficiario     Beneficiario     @relation(fields: [cnpj_beneficiario], references: [cnpj], onDelete: Restrict, onUpdate: Restrict)
+    processoJuridico ProcessoJuridico @relation(fields: [numero_processo], references: [numero], onDelete: Restrict, onUpdate: Restrict)
 
-  @@map("custas_judiciais")
+    @@map("custas_judiciais")
 }

@@ -1,0 +1,5 @@
+1- Pegar o link inicial da emissao da guia de custa
+
+2- FAZER UMA INTERFACE PRO RESPONSE
+
+3- TESTAR O POST
